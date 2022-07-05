@@ -21,7 +21,9 @@
         <thead>
           <tr>
             <th class="tg-0lax">nationalId</th>
-            {{!-- <th class="tg-0lax">password</th> --}}
+            {{#if adminView}}
+            <th class="tg-0lax">password</th>
+            {{/if}}
             <th class="tg-0lax">email</th>
             <th class="tg-0lax">docs</th>
           </tr>
@@ -30,10 +32,16 @@
           {{#each users}}
           <tr>
             <td class="tg-0lax">{{this.nationalId}}</td>
-            {{!-- <td class="tg-0lax">{{this.password}}</td> --}}
+            {{#if ../adminView}}
+            <td class="tg-0lax">{{this.password}}</td>
+            {{/if}}
             <td class="tg-0lax">{{this.email}}</td>
             <td class="tg-0lax">{{this.docs}}</td>
+            {{#if ../adminView}}
+            <td><a id="update-user-btn" href="/admin/users/edit/{{this._id}}">Update user</button></td>
+            {{/if}}
           </tr>
+          
           {{/each}}
         </tbody>
       </table>

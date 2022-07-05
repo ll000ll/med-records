@@ -7,7 +7,11 @@ router.get("/login", adminController.getLogin)
 router.post("/login", adminController.postLogin)
 
 router.get("/users", adminController.getUsers)
-router.get("/createUser", adminController.getCreateUser)
-router.post("/createUser", adminController.postCreateUser)
+router.get("/users/createUser", adminController.getCreateUser)
+router.post("/users/createUser", adminController.postCreateUser)
+router.get("/users/:userId", adminController.getUser)
+router.get("/users/edit/:userId", adminController.getEditUser)
+router.post("/users/edit/:userId", adminController.postEditUser)
+router.post("/users/delete/:userId", adminController.deleteUser)
 
 module.exports = router

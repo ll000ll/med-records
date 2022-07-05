@@ -11,7 +11,9 @@ const getCheckResult = (req, res, next) => {
 const postUserResults = async (req, res, next) => {
   const { nationalId, password } = req.body
   if (!nationalId || !password) {
-    return next(new HttpError("Please make sure you enter the correct credentials", 403))
+    return next(
+      new HttpError("Please make sure you enter the correct credentials", 403)
+    )
   }
 
   let userResult
@@ -30,7 +32,8 @@ const postUserResults = async (req, res, next) => {
     return next(error)
   }
 
-  res.status(200).render("userData", {
+  res.status(200).render("userResultData", {
+    adminView: false,
     hasUsers: true,
     pageTitle: "Results",
     users: [

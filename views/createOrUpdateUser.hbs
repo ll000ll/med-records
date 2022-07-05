@@ -1,0 +1,26 @@
+<div>
+    {{#if editMode}}
+    <form action="/admin/users/edit/{{_id}}" method="POST" >
+    {{else}}
+    <form action="/admin/users" method="POST">
+    {{/if}}
+     <div>
+        <label for="nationalId">EGN</label>
+        <input type="number" name="nationalId" value="{{ nationalId }}" />
+     </div>
+     <div>
+        <label for="password">Password:</label>
+        <input type="password" alt="password" name="password"  value="{{password}}"  />
+     </div>
+     <div>
+        <label for="email">email:</label>
+        <input type="email" alt="email" name="email" value="{{email}}"/>
+     </div>
+        {{#if editMode}}
+        <button type="submit">Update user </button>
+        <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
+        {{else}}
+        <button type="submit">Create user </button>
+        {{/if}}
+  </form>
+</div>

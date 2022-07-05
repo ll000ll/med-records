@@ -12,16 +12,21 @@ const getUsers = async (req, res, next) => {
     const error = new HttpError("Could not get all the users.", 500)
     return next(error)
   }
-  res.render("userData", { hasUsers: allUsers.length > 0, users: allUsers, render: 'Users List' })
+  res.render("userResultData", {
+    adminView: true,
+    hasUsers: allUsers.length > 0,
+    users: allUsers,
+    render: "Users List",
+  })
 }
 
 const getCreateUser = (req, res, next) => {
-  res.status(200).sendFile(path.join(rootDir, "views", "createUser.html"))
+  res.render("createOrUpdateUser", { editMode: false })
 }
 
 const postCreateUser = async (req, res, next) => {
-  const { nationalId, email = '111111@w1111.com', password, docs = [] } = req.body
-  console.log(req.body)
+  const { nationalId, email = "", password, docs = [] } = req.body
+
   const createdUser = new User({
     email,
     password,
@@ -36,7 +41,7 @@ const postCreateUser = async (req, res, next) => {
     return next(error)
   }
 
-  res.status(201).render("userData", {
+  res.status(201).render("userResultData", {
     pageTitle: "Create user",
     hasUsers: true,
     users: [
@@ -84,10 +89,86 @@ const getLogin = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "login.html"))
 }
 
+const getUser = async (req, res, next) => {
+  const { userId } = req.params
+
+  let existingUser
+
+  try {
+    existingUser = await User.findById(userId).lean()
+  } catch (err) {
+    const error = new HttpError("Cannot find this user.", 500)
+    return next(error)
+  }
+  res.status(200).render("userResultData", {
+    hasUsers: true,
+    adminView: true,
+    pageTitle: "User view",
+    users: [
+      {
+        ...existingUser,
+      },
+    ],
+  })
+}
+
+const postEditUser = async (req, res, next) => {
+  const { nationalId, email = "", password, docs = [] } = req.body
+  const _id = req.params.userId
+
+  let updatedUser
+  try {
+    await User.findOneAndUpdate({ _id }, { ...req.body })
+    updatedUser = await User.findById(_id).lean()
+  } catch (err) {
+    const error = new HttpError("Updating user failed, please try again.", 500)
+    return next(error)
+  }
+
+  res.status(201).redirect(`/admin/users/${_id}`)
+}
+
+const getEditUser = async (req, res, next) => {
+  const { userId } = req.params
+
+  let user
+  try {
+    user = await User.findById(userId).lean()
+  } catch (e) {
+    const error = new HttpError("Cannot find the user in the db.", 500)
+    return next(error)
+  }
+  res.status(200).render("createOrUpdateUser", {
+    ...user,
+    editMode: true,
+  })
+}
+
+const deleteUser = async (req, res, next) => {
+  const { userId } = req.params
+  if (!userId) {
+    const error = new HttpError("Cannot find the user. Not deleted", 500)
+    return next(error)
+  }
+
+  try {
+    await User.deleteOne({ _id: userId })
+  } catch (e) {
+    const error = new HttpError("Cannot delete the user. Please try again", 500)
+    return next(error)
+  }
+
+  res.status(204).redirect("/admin/users")
+}
+
 module.exports = {
   getUsers,
   getCreateUser,
   postCreateUser,
   getLogin,
   postLogin,
+  getUser,
+  postEditUser,
+  getEditUser,
+  deleteUser,
 }
