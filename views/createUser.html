@@ -8,12 +8,14 @@
 </head>
 <body>
     <div>
-        <form action="/user-results" method="POST">
-            <label for="nationalId">EGN:</label>
+        <form action="/admin/createUser" method="POST">
+            <label for="nationalId">ID:</label>
             <input type="number" name="nationalId">
             <label for="password">Password:</label>
             <input type="password" alt="password" name="password">
-            <button type="submit">Check result</button>
+            <label for="email">email:</label>
+            <input type="email" alt="email" name="email">
+            <button type="submit">Create user</button>
         </form>
     </div>
 </body>
