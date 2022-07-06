@@ -21,9 +21,15 @@
      </div>
      <div>
         <label for="file"></label>
-        <input type="file" name="file"></input>
+        <input type="file" name="file" value="sss"></input>
+        {{#if editMode}}
+        <a href="/user-results/{{this.docs}}">
+            <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
+        </a>
+        <input type="hidden" value="{{this.docs}}" name="docId">
+        {{/if}}
      </div>
-    {{#if editMode}}
+     {{#if editMode}}
     <button type="submit">Update user </button>
     <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
     {{else}}

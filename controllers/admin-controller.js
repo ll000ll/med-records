@@ -3,6 +3,7 @@ const path = require("path")
 const rootDir = require("../utils/path")
 const User = require("../models/user")
 const HttpError = require("../models/http-error")
+const deleteFile = require("../utils/fileDeletion")
 
 const getUsers = async (req, res, next) => {
   let allUsers
@@ -126,11 +127,16 @@ const postEditUser = async (req, res, next) => {
 
   let updatedUser
   try {
-    const valuesToUpdate = req.file?.path
+    const fileToUpdatePresent = req.file?.path
+    const valuesToUpdate = fileToUpdatePresent
       ? { ...req.body, docs }
       : { ...req.body }
-    await User.findOneAndUpdate({ _id }, valuesToUpdate)
+    const userBeforeUpdate = await User.findOneAndUpdate(
+      { _id },
+      valuesToUpdate
+    )
     updatedUser = await User.findById(_id).lean()
+    deleteFile.fileSweeper(userBeforeUpdate.docs[0])
   } catch (err) {
     const error = new HttpError("Updating user failed, please try again.", 500)
     return next(error)
@@ -161,14 +167,13 @@ const deleteUser = async (req, res, next) => {
     const error = new HttpError("Cannot find the user. Not deleted", 500)
     return next(error)
   }
-
   try {
     await User.deleteOne({ _id: userId })
   } catch (e) {
     const error = new HttpError("Cannot delete the user. Please try again", 500)
     return next(error)
   }
-
+  deleteFile.fileSweeper(req.body.docId)
   res.status(204).redirect("/admin/users")
 }
 
