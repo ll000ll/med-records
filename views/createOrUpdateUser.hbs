@@ -1,8 +1,11 @@
 <div>
+    {{#if errorMessage}}
+    <div><h2>{{errorMessage}}</h2></div>
+    {{/if}}
     {{#if editMode}}
-    <form action="/admin/users/edit/{{_id}}" method="POST" >
+    <form action="/admin/users/edit/{{_id}}" method="POST" enctype="multipart/form-data" >
     {{else}}
-    <form action="/admin/users" method="POST">
+    <form action="/admin/users/createUser" method="POST" enctype="multipart/form-data">
     {{/if}}
      <div>
         <label for="nationalId">EGN</label>
@@ -16,11 +19,15 @@
         <label for="email">email:</label>
         <input type="email" alt="email" name="email" value="{{email}}"/>
      </div>
-        {{#if editMode}}
-        <button type="submit">Update user </button>
-        <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
-        {{else}}
-        <button type="submit">Create user </button>
-        {{/if}}
+     <div>
+        <label for="file"></label>
+        <input type="file" name="file"></input>
+     </div>
+    {{#if editMode}}
+    <button type="submit">Update user </button>
+    <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
+    {{else}}
+    <button type="submit">Create user </button>
+    {{/if}}
   </form>
 </div>

@@ -25,8 +25,16 @@ const getCreateUser = (req, res, next) => {
 }
 
 const postCreateUser = async (req, res, next) => {
-  const { nationalId, email = "", password, docs = [] } = req.body
-
+  const { nationalId, email = "", password } = req.body
+  const userFile = req.file
+  if (!userFile) {
+    return res.render("createOrUpdateUser", {
+      ...req.body,
+      editMode: false,
+      errorMessage: "Attached file is not supported",
+    })
+  }
+  const docs = [req.file.path]
   const createdUser = new User({
     email,
     password,
@@ -113,12 +121,15 @@ const getUser = async (req, res, next) => {
 }
 
 const postEditUser = async (req, res, next) => {
-  const { nationalId, email = "", password, docs = [] } = req.body
   const _id = req.params.userId
+  const docs = [req.file?.path]
 
   let updatedUser
   try {
-    await User.findOneAndUpdate({ _id }, { ...req.body })
+    const valuesToUpdate = req.file?.path
+      ? { ...req.body, docs }
+      : { ...req.body }
+    await User.findOneAndUpdate({ _id }, valuesToUpdate)
     updatedUser = await User.findById(_id).lean()
   } catch (err) {
     const error = new HttpError("Updating user failed, please try again.", 500)

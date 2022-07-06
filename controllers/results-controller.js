@@ -1,4 +1,5 @@
 const path = require("path")
+const fs = require("fs")
 
 const HttpError = require("../models/http-error")
 const rootDir = require("../utils/path")
@@ -44,7 +45,18 @@ const postUserResults = async (req, res, next) => {
   })
 }
 
+const getUserResultsFile = (req, res, next) => {
+  const filepath = path.join("data", `${req.params.userFile}`)
+  return fs.readFile(filepath, (err, data) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(data)
+  })
+}
+
 module.exports = {
   postUserResults,
   getCheckResult,
+  getUserResultsFile,
 }
