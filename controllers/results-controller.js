@@ -46,13 +46,20 @@ const postUserResults = async (req, res, next) => {
 }
 
 const getUserResultsFile = (req, res, next) => {
-  const filepath = path.join("data", `${req.params.userFile}`)
-  return fs.readFile(filepath, (err, data) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(data)
-  })
+  const fileName = req.params.userFile
+  const filepath = path.join("data", `${fileName}`)
+  // return fs.readFile(filepath, (err, data) => {
+  //   if (err) {
+  //     return next(err)
+  //   }
+  //   res.setHeader('Content-Type', 'application/pdf')
+  //   res.setHeader('Content-Disposition', `inline; filename="${fileName}"`)
+  //   res.send(data)
+  // })
+  const file = fs.createReadStream(filepath)
+  res.setHeader("Content-Type", "application/pdf")
+  res.setHeader("Content-Disposition", `inline; filename="${fileName}"`)
+  file.pipe(res)
 }
 
 module.exports = {
