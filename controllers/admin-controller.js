@@ -26,7 +26,7 @@ const getCreateUser = (req, res, next) => {
 }
 
 const postCreateUser = async (req, res, next) => {
-  const { nationalId, email = "", password } = req.body
+  const { nationalId, email = "", password, accessLevel } = req.body
   const userFile = req.file
   if (!userFile) {
     return res.render("createOrUpdateUser", {
@@ -37,16 +37,28 @@ const postCreateUser = async (req, res, next) => {
   }
   const docs = [req.file.path]
   const createdUser = new User({
-    email,
-    password,
     nationalId,
+    password,
+    email,
+    accessLevel,
     docs,
   })
 
   try {
     await createdUser.save()
   } catch (err) {
-    const error = new HttpError("Creating user failed, please try again.", 500)
+    let error
+    if (err) {
+      error = new HttpError(
+        "Creating user failed => duplicate key or missing required field.",
+        500
+      )
+    } else {
+      error = new HttpError(
+        "Creating user failed, please try again.",
+        500
+      )
+    }
     return next(error)
   }
 

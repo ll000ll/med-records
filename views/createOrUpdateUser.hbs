@@ -8,26 +8,39 @@
     <form action="/admin/users/createUser" method="POST" enctype="multipart/form-data">
     {{/if}}
      <div>
-        <label for="nationalId">EGN</label>
+        <label for="nationalId">EGN*</label>
         <input type="number" name="nationalId" value="{{ nationalId }}" />
      </div>
      <div>
-        <label for="password">Password:</label>
+        <label for="password">Password*:</label>
         <input type="password" alt="password" name="password"  value="{{password}}"  />
      </div>
      <div>
-        <label for="email">email:</label>
+        <label for="email">email:*</label>
         <input type="email" alt="email" name="email" value="{{email}}"/>
      </div>
      <div>
         <label for="file"></label>
-        <input type="file" name="file" value="sss"></input>
+        <input type="file" name="file">
         {{#if editMode}}
         <a href="/user-results/{{this.docs}}">
             <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
         </a>
         <input type="hidden" value="{{this.docs}}" name="docId">
         {{/if}}
+        <div>
+            <label for="regularAccess">Regular access</label>
+            <input type="radio" value="regular" name="accessLevel" checked>
+         </div>
+         <div>
+            <label for="auditorAccess">Auditor access</label>
+            <input type="radio" value="auditor" name="accessLevel">
+         </div>
+         <div>
+            <label for="adminAccess">Admin access</label>
+            <input type="radio" value="admin" name="accessLevel">    
+         </div>
+        </div>
      </div>
      {{#if editMode}}
     <button type="submit">Update user </button>

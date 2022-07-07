@@ -1,9 +1,14 @@
 const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema({
-  nationalId: { type: Number, required: true },
+  nationalId: { type: Number, required: true, unique: true },
   password: { type: String, required: true, minlength: 2 },
-  email: { type: String, required: true },
+  email: { type: String },
+  accessLevel: {
+    type: String,
+    enum: ["regular", "auditor", "admin"],
+    default: "regular",
+  },
   docs: [{ type: String }],
 })
 
