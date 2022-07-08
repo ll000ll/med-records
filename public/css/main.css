@@ -1,0 +1,36 @@
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf 100%);
+}
+
+h1 {
+  color: white
+}
+
+.wrapper {
+  margin: 0 auto;
+  padding: 0;
+}
+
+.main-section,
+.aside-section {
+  padding: 1em;
+}
+
+.section-container {
+  display: flex;
+}
+
+.section-container .aside-section {
+  flex: 1;
+}
+
+.section-container .main-section {
+  flex: 3;
+}
+

@@ -1,0 +1,50 @@
+.user-login-form ul,
+.user-edit-form ul,
+.form-admin-default ul {
+  list-style: none;
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5em;
+  width: 60%;
+}
+.form-row > label {
+  padding: 0.5em 1em 0.5em 0;
+  color: white;
+  flex: 0.1;
+}
+.form-row > input:not([type=radio]) {
+  flex: 1;
+}
+.form-row > input,
+.form-row > button {
+  padding: 0.5em;
+  justify-content: flex-end;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.form-row > button {
+  background: rgb(110, 27, 189);
+  color: white;
+  border: 0;
+  font-size: 20px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin: 2em 0;
+}
+
+.nav-li-radio {
+    margin-right: 1em;
+}

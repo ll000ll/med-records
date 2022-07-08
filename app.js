@@ -50,6 +50,7 @@ app.engine(
 app.set("view engine", "hbs")
 app.set("views", "views")
 app.use("/data", express.static(path.join(__dirname, "data")))
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(multer({ storage: fileStorage, fileFilter }).single("file"))
