@@ -1,0 +1,60 @@
+<div>
+    {{#if emptyResultSet}}<h1>Please add some search criteria</h1>{{/if}}
+    <form action="/admin" class="form-admin-default" method="POST">
+        <ul>
+            <li class="form-row">
+                <label for="nationalId">ID/EGN:</label>
+                <input type="text" name="nationalId">
+            </li>
+            <li class="form-row">
+                <label for="email">Email:</label>
+                <input type="email" name="email">
+            </li>
+            <li class="form-row">
+                <label for="auditor">Regular</label>
+                <input type="radio" class="nav-li-radio" name="accessLevel" value="regular">
+                <label for="auditor">Auditor</label>
+                <input type="radio" class="nav-li-radio" name="accessLevel" value="auditor">
+                <label for="admin">Admin</label>
+                <input type="radio"  class="nav-li-radio" name="accessLevel" value="admin">
+            </li>
+            <li class="form-row">
+                <button type="submit">Search</button>
+            </li>
+        </ul>
+    </form>
+    <div></div>
+     <div>
+      {{#if hasUsers}}
+      <table class="tg">
+        <thead>
+          <tr>
+            <th class="tg-0lax">nationalId</th>
+            <th class="tg-0lax">password</th>
+            <th class="tg-0lax">email</th>
+            <th class="tg-0lax">docs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each users}}
+          <tr>
+            <td class="tg-0lax">{{this.nationalId}}</td>
+            <td class="tg-0lax">{{this.password}}</td>
+            <td class="tg-0lax">{{this.email}}</td>
+            <td class="tg-0lax">
+              <a href="/results/{{this.docs}}" target="_blank">
+                <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
+              </a>
+            </td>
+            <td>
+              <a id="update-user-btn" href="/admin/users/edit/{{this._id}}">              
+                <button>Update user</button>
+              </a>
+            </td>
+          </tr>     
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
+    </div>
+</div>

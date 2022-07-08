@@ -3,50 +3,55 @@
     <div><h2>{{errorMessage}}</h2></div>
     {{/if}}
     {{#if editMode}}
-    <form action="/admin/users/edit/{{_id}}" method="POST" enctype="multipart/form-data" >
+    <form action="/admin/users/edit/{{_id}}" method="POST" enctype="multipart/form-data" class="user-edit-form">
     {{else}}
-    <form action="/admin/users/createUser" method="POST" enctype="multipart/form-data">
+    <form action="/admin/users/create" method="POST" enctype="multipart/form-data" class="user-edit-form">
     {{/if}}
-     <div>
-        <label for="nationalId">EGN*</label>
-        <input type="number" name="nationalId" value="{{ nationalId }}" />
-     </div>
-     <div>
-        <label for="password">Password*:</label>
-        <input type="password" alt="password" name="password"  value="{{password}}"  />
-     </div>
-     <div>
-        <label for="email">email:*</label>
-        <input type="email" alt="email" name="email" value="{{email}}"/>
-     </div>
-     <div>
-        <label for="file"></label>
-        <input type="file" name="file">
-        {{#if editMode}}
-        <a href="/user-results/{{this.docs}}">
-            <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
-        </a>
-        <input type="hidden" value="{{this.docs}}" name="docId">
-        {{/if}}
-        <div>
-            <label for="regularAccess">Regular access</label>
-            <input type="radio" value="regular" name="accessLevel" checked>
-         </div>
-         <div>
-            <label for="auditorAccess">Auditor access</label>
-            <input type="radio" value="auditor" name="accessLevel">
-         </div>
-         <div>
-            <label for="adminAccess">Admin access</label>
-            <input type="radio" value="admin" name="accessLevel">    
-         </div>
-        </div>
-     </div>
-     {{#if editMode}}
-    <button type="submit">Update user </button>
-    <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
-    {{else}}
-    <button type="submit">Create user </button>
-    {{/if}}
+    <ul>
+      <li  class="form-row">
+         <label for="nationalId">EGN*</label>
+         <input type="number" name="nationalId" value="{{ nationalId }}" />
+      </li>
+      <li  class="form-row">
+         <label for="password">Password*:</label>
+         <input type="password" alt="password" name="password"  value="{{password}}"  />
+      </li>
+      <li class="form-row">
+         <label for="email">email:*</label>
+         <input type="email" alt="email" name="email" value="{{email}}"/>
+      </li>
+      <li>
+         <label for="file-upload" class="custom-file-upload">
+            <i class="fa fa-cloud-upload"></i> Upload file
+         </label>
+         <input id="file-upload" type="file" name="file"/>
+         {{#if editMode}}
+         <a href="/results/{{this.docs}}" target="_blank">
+               <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
+         </a>
+         <input type="hidden" value="{{this.docs}}" name="docId">
+         {{/if}}
+      </li>
+      <li >
+         <label for="regularAccess">Regular access</label>
+         <input type="radio" value="regular" name="accessLevel" checked>
+         <label for="auditorAccess">Auditor access</label>
+         <input type="radio" value="auditor" name="accessLevel">
+         <label for="adminAccess">Admin access</label>
+         <input type="radio" value="admin" name="accessLevel">    
+      </li>
+      {{#if editMode}}
+      <li class="form-row">
+         <button type="submit" formaction="/admin/users/delete/{{_id}}">Delete user</button>
+      </li>
+      <li class="form-row">
+         <button type="submit">Update user </button>
+      </li>
+      {{else}}
+      <li class="form-row">
+      <button type="submit">Create user</button>
+      </li>
+      {{/if}}
+    </ul>
   </form>
 </div>

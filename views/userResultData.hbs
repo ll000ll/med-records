@@ -21,9 +21,6 @@
         <thead>
           <tr>
             <th class="tg-0lax">nationalId</th>
-            {{#if adminView}}
-            <th class="tg-0lax">password</th>
-            {{/if}}
             <th class="tg-0lax">email</th>
             <th class="tg-0lax">docs</th>
           </tr>
@@ -32,22 +29,12 @@
           {{#each users}}
           <tr>
             <td class="tg-0lax">{{this.nationalId}}</td>
-            {{#if ../adminView}}
-            <td class="tg-0lax">{{this.password}}</td>
-            {{/if}}
             <td class="tg-0lax">{{this.email}}</td>
             <td class="tg-0lax">
-              <a href="/user-results/{{this.docs}}" target="_blank">Your results:
+              <a href="/results/{{this.docs}}" target="_blank">Your results:
                 <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
               </a>
             </td>
-            {{#if ../adminView}}
-            <td>
-              <a id="update-user-btn" href="/admin/users/edit/{{this._id}}">              
-                <button>Update user</button>
-              </a>
-            </td>
-            {{/if}}
           </tr>
           
           {{/each}}

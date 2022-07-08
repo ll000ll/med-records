@@ -3,17 +3,39 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navigation.css">
+    <link rel="stylesheet" href="/css/login.css">
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"
       integrity="sha512-6PM0qYu5KExuNcKt5bURAoT6KCThUmHRewN3zUFNaoI6Di7XJPTMoT6K0nsagZKk2OB4L7E3q1uQKHNHd4stIQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
-      defer
     >
     </script>
     <title>{{pageTitle}}</title>
   </head>
   <body>
-    {{{body}}}
+  <div class="wrapper">
+    {{#if isAdmin}}
+    <nav class="flex-nav">
+      <ul>
+        <li class="{{#if activeClassAdd}} navItemisActive {{/if}}"><a href="/admin/users/create">Add</a></li>
+        <li class="{{#if activeClassSearch}} navItemisActive {{/if}}"><a href="/admin">Search</a></li>
+        <li class="{{#if activeClassList}} navItemisActive {{/if}}""><a href="/admin/users/list">List</a></li>
+        <li class="logout"><a href=""><i
+              class="fa-solid fa-right-from-bracket fa-xl"
+            ></i></a></li>
+      </ul>
+    </nav>
+    {{/if}}
+    <div class="section-container">
+      <section class="aside-section"></section>
+      <section class="main-section">
+      {{{body}}}
+      </section>
+      <section class="aside-section"></section>
+    </div>
+  </div>
   </body>
 </html>

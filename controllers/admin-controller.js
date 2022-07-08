@@ -5,7 +5,47 @@ const User = require("../models/user")
 const HttpError = require("../models/http-error")
 const deleteFile = require("../utils/fileDeletion")
 
-const getUsers = async (req, res, next) => {
+const getIndex = async (req, res, next) => {
+  res
+    .status(200)
+    .render("adminDefault", { isAdmin: true, activeClassSearch: true })
+}
+
+const postIndex = async (req, res, next) => {
+  const { nationalId, email, accessLevel } = req.body
+  let emptyResultSet
+  let searchFilter
+  if (!nationalId && !email && !accessLevel) {
+    emptyResultSet = true
+  } else {
+    if (nationalId) {
+      searchFilter = { nationalId }
+    }
+    if (email) {
+      searchFilter = { ...searchFilter, email }
+    }
+    if (accessLevel) {
+      searchFilter = { ...searchFilter, accessLevel }
+    }
+  }
+  let usersFound
+  try {
+    usersFound = searchFilter && (await User.find(searchFilter).lean())
+  } catch (err) {
+    const error = new HttpError("Could not get the users.", 500)
+    return next(error)
+  }
+
+  res.status(200).render("adminDefault", {
+    emptyResultSet,
+    isAdmin: true,
+    activeClassSearch: true,
+    hasUsers: usersFound?.length > 0,
+    users: usersFound,
+  })
+}
+
+const getAllUsers = async(req, res, next) => {
   let allUsers
   try {
     allUsers = await User.find({}).lean()
@@ -14,15 +54,19 @@ const getUsers = async (req, res, next) => {
     return next(error)
   }
   res.render("userResultData", {
-    adminView: true,
     hasUsers: allUsers.length > 0,
     users: allUsers,
-    render: "Users List",
+    activeClassList: true,
+    isAdmin: true
   })
 }
 
 const getCreateUser = (req, res, next) => {
-  res.render("createOrUpdateUser", { editMode: false })
+  res.status(200).render("createOrUpdateUser", {
+    editMode: false,
+    isAdmin: true,
+    activeClassAdd: true,
+  })
 }
 
 const postCreateUser = async (req, res, next) => {
@@ -32,6 +76,7 @@ const postCreateUser = async (req, res, next) => {
     return res.render("createOrUpdateUser", {
       ...req.body,
       editMode: false,
+      isAdmin: true,
       errorMessage: "Attached file is not supported",
     })
   }
@@ -54,17 +99,15 @@ const postCreateUser = async (req, res, next) => {
         500
       )
     } else {
-      error = new HttpError(
-        "Creating user failed, please try again.",
-        500
-      )
+      error = new HttpError("Creating user failed, please try again.", 500)
     }
     return next(error)
   }
 
-  res.status(201).render("userResultData", {
+  res.status(201).render("adminDefault", {
     pageTitle: "Create user",
     hasUsers: true,
+    isAdmin: true,
     users: [
       {
         nationalId,
@@ -102,59 +145,34 @@ const postLogin = async (req, res, next) => {
     )
     return next(error)
   }
-
-  res.json({ message: `Hi ${email}` })
+  res.status(200).redirect("/admin")
 }
 
 const getLogin = (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views", "login.html"))
-}
-
-const getUser = async (req, res, next) => {
-  const { userId } = req.params
-
-  let existingUser
-
-  try {
-    existingUser = await User.findById(userId).lean()
-  } catch (err) {
-    const error = new HttpError("Cannot find this user.", 500)
-    return next(error)
-  }
-  res.status(200).render("userResultData", {
-    hasUsers: true,
-    adminView: true,
-    pageTitle: "User view",
-    users: [
-      {
-        ...existingUser,
-      },
-    ],
-  })
+  res.status(200).render("adminLogin")
 }
 
 const postEditUser = async (req, res, next) => {
   const _id = req.params.userId
-  const docs = [req.file?.path]
-
-  let updatedUser
+  const newFileIsPresent = req.file?.path
+  const docs = [newFileIsPresent]
   try {
-    const fileToUpdatePresent = req.file?.path
-    const valuesToUpdate = fileToUpdatePresent
+    if (req.body?.docId) {
+      delete req.body.docId
+    }
+    let updateFilter = newFileIsPresent
       ? { ...req.body, docs }
       : { ...req.body }
-    const userBeforeUpdate = await User.findOneAndUpdate(
-      { _id },
-      valuesToUpdate
-    )
-    updatedUser = await User.findById(_id).lean()
-    deleteFile.fileSweeper(userBeforeUpdate.docs[0])
+    const userBeforeUpdate = await User.findOneAndUpdate({ _id }, updateFilter)
+    if (newFileIsPresent) {
+      deleteFile.fileSweeper(userBeforeUpdate.docs[0])
+    }
   } catch (err) {
     const error = new HttpError("Updating user failed, please try again.", 500)
     return next(error)
   }
 
-  res.status(201).redirect(`/admin/users/${_id}`)
+  res.status(201).redirect(`/admin`)
 }
 
 const getEditUser = async (req, res, next) => {
@@ -170,6 +188,7 @@ const getEditUser = async (req, res, next) => {
   res.status(200).render("createOrUpdateUser", {
     ...user,
     editMode: true,
+    isAdmin: true,
   })
 }
 
@@ -181,22 +200,24 @@ const deleteUser = async (req, res, next) => {
   }
   try {
     await User.deleteOne({ _id: userId })
+    deleteFile.fileSweeper(req.body.docId)
   } catch (e) {
     const error = new HttpError("Cannot delete the user. Please try again", 500)
     return next(error)
   }
-  deleteFile.fileSweeper(req.body.docId)
-  res.status(204).redirect("/admin/users")
+
+  res.status(204).redirect("/admin")
 }
 
 module.exports = {
-  getUsers,
+  getIndex,
   getCreateUser,
   postCreateUser,
   getLogin,
   postLogin,
-  getUser,
   postEditUser,
   getEditUser,
   deleteUser,
+  postIndex,
+  getAllUsers
 }

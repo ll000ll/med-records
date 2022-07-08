@@ -5,16 +5,18 @@ const HttpError = require("../models/http-error")
 const rootDir = require("../utils/path")
 const User = require("../models/user")
 
-const getCheckResult = (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views", "resultsCheck.html"))
+const getUserLogin = (req, res, next) => {
+  res.status(200).render("userLogin")
 }
 
 const postUserResults = async (req, res, next) => {
   const { nationalId, password } = req.body
   if (!nationalId || !password) {
-    return next(
-      new HttpError("Please make sure you enter the correct credentials", 403)
-    )
+    return res
+      .status(404)
+      .render("userLogin", {
+        errorMessage: "Please make sure you've entered the correct credentials",
+      })
   }
 
   let userResult
@@ -34,7 +36,6 @@ const postUserResults = async (req, res, next) => {
   }
 
   res.status(200).render("userResultData", {
-    adminView: false,
     hasUsers: true,
     pageTitle: "Results",
     users: [
@@ -48,22 +49,30 @@ const postUserResults = async (req, res, next) => {
 const getUserResultsFile = (req, res, next) => {
   const fileName = req.params.userFile
   const filepath = path.join("data", `${fileName}`)
-  // return fs.readFile(filepath, (err, data) => {
-  //   if (err) {
-  //     return next(err)
-  //   }
-  //   res.setHeader('Content-Type', 'application/pdf')
-  //   res.setHeader('Content-Disposition', `inline; filename="${fileName}"`)
-  //   res.send(data)
-  // })
-  const file = fs.createReadStream(filepath)
-  res.setHeader("Content-Type", "application/pdf")
-  res.setHeader("Content-Disposition", `inline; filename="${fileName}"`)
-  file.pipe(res)
+  if (fs.existsSync(filepath)) {
+    const file = fs.createReadStream(filepath)
+    res.setHeader("Content-Type", "application/pdf")
+    res.setHeader("Content-Disposition", `inline; filename="${fileName}"`)
+    file.pipe(res)
+    // read sync in memory
+    // return fs.readFile(filepath, (err, data) => {
+    //   if (err) {
+    //     return next(err)
+    //   }
+    //   res.setHeader('Content-Type', 'application/pdf')
+    //   res.setHeader('Content-Disposition', `inline; filename="${fileName}"`)
+    //   res.send(data)
+    // })
+    return
+  }
+  res.status(500).render("500", { pageTitle: "Not found", message: "File not found. :-("})
+
+
+
 }
 
 module.exports = {
   postUserResults,
-  getCheckResult,
+  getUserLogin,
   getUserResultsFile,
 }
