@@ -6,7 +6,7 @@ const rootDir = require("../utils/path")
 const User = require("../models/user")
 
 const getUserLogin = (req, res, next) => {
-  res.status(200).render("userLogin")
+  res.status(200).render("login")
 }
 
 const postUserResults = async (req, res, next) => {

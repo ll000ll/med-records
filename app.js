@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require("uuid")
 
 const resultRoutes = require("./routes/results-routes")
 const adminRoutes = require("./routes/admin-routes")
+const authRoutes = require("./routes/auth-routes")
 const HttpError = require("./models/http-error")
 
 mongoose.Promise = global.Promise
@@ -55,6 +56,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(multer({ storage: fileStorage, fileFilter }).single("file"))
 
+app.use("/admin", authRoutes)
 app.use("/admin", adminRoutes)
 app.use(resultRoutes)
 

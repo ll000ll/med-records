@@ -1,0 +1,27 @@
+<div>
+  </form>
+  <form action="/results" method="POST" class="user-login-form">
+    <ul>
+      <li class="form-row">
+        {{#if isAdminView}}
+        <label for="email">Email:</label>
+        <input type="email" name="email" />
+        {{else}}
+        <label for="nationalId">EGN:</label>
+        <input type="number" name="nationalId" />
+        {{/if}}
+      </li>
+      <li class="form-row">
+        <label for="password">Password:</label>
+        <input type="password" alt="password" name="password" />
+      </li>
+      <li class="form-row">
+        {{#if isAdminView}}
+        <button type="submit" formaction="/login" method="POST">{{#if submitView}} Submit {{else}} Login {{/if}}</button>
+        {{else}}
+        <button type="submit">Check result</button>
+        {{/if}}
+      </li>
+    </ul>
+  </form>
+</div>
