@@ -1,4 +1,4 @@
-const User = require("../models/user")
+const { User } = require("../models/user")
 
 const getSignup = (req, res, next) => {
   res.render("login", { submitView: true, isAdminView: true })

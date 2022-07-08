@@ -6,10 +6,22 @@ const userSchema = new mongoose.Schema({
   email: { type: String },
   accessLevel: {
     type: String,
-    enum: ["regular", "auditor", "admin"],
     default: "regular",
   },
   docs: [{ type: String }],
 })
 
-module.exports = mongoose.model("User", userSchema)
+const superUserSchema = new mongoose.Schema({
+  password: { type: String, required: true, minlength: 2 },
+  email: { type: String, required: true, unique: true },
+  accessLevel: {
+    type: String,
+    enum: ["auditor", "admin", "adminForApproval"],
+    default: "admin",
+  }
+})
+
+module.exports = {
+  User: mongoose.model("User", userSchema),
+  SuperUser: mongoose.model("Superuser", superUserSchema),
+}

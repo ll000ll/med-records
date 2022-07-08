@@ -3,7 +3,7 @@ const fs = require("fs")
 
 const HttpError = require("../models/http-error")
 const rootDir = require("../utils/path")
-const User = require("../models/user")
+const { User } = require("../models/user")
 
 const getUserLogin = (req, res, next) => {
   res.status(200).render("login")

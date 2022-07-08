@@ -1,7 +1,7 @@
 const path = require("path")
 
 const rootDir = require("../utils/path")
-const User = require("../models/user")
+const { User } = require("../models/user")
 const HttpError = require("../models/http-error")
 const deleteFile = require("../utils/fileDeletion")
 
