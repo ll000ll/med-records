@@ -67,7 +67,14 @@ const postLogin = async (req, res, next) => {
   }
   req.session.isLoggedIn = true
   req.session.user = existingUser
+  req.session.save()
   res.status(200).redirect("/admin")
+}
+
+const logout = (req, res, next) => {
+  req.session.destroy(err => {
+    res.redirect('/admin/login')
+  })
 }
 
 module.exports = {
@@ -75,4 +82,5 @@ module.exports = {
   postSignup,
   getLogin,
   postLogin,
+  logout
 }

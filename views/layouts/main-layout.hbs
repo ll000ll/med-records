@@ -22,10 +22,9 @@
       <ul>
         <li class="{{#if activeClassAdd}} navItemisActive {{/if}}"><a href="/admin/users/create">Add</a></li>
         <li class="{{#if activeClassSearch}} navItemisActive {{/if}}"><a href="/admin">Search</a></li>
-        <li class="{{#if activeClassList}} navItemisActive {{/if}}""><a href="/admin/users/list">List</a></li>
-        <li class="logout"><a href=""><i
-              class="fa-solid fa-right-from-bracket fa-xl"
-            ></i></a></li>
+        <li class="{{#if activeClassList}} navItemisActive {{/if}}"><a href="/admin/users/list">List</a></li>
+        <li class="logout">
+            <a href="/admin/logout"><i class="fa-solid fa-right-from-bracket fa-xl"></i></a>
       </ul>
     </nav>
     {{/if}}
