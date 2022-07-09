@@ -15,7 +15,7 @@
         <label for="password">Password:</label>
         <input type="password" alt="password" name="password" />
       </li>
-      {{#if isAdminView}}
+      {{#if submitView}}
       <li class="form-row">
         <label for="confirmPassword">Confirm password:</label>
         <input type="password" alt="password" name="confirmPassword" />
@@ -23,9 +23,13 @@
       {{/if}}
       <li class="form-row">
         {{#if isAdminView}}
-        <button type="submit" formaction="/login" method="POST">{{#if submitView}} Submit {{else}} Login {{/if}}</button>
+          {{#if submitView}} 
+          <button type="submit" formaction="/admin/signup" method="POST">Submit</button>
+          {{else}}
+          <button type="submit" formaction="/admin/login" method="POST">Login</button>
+          {{/if}}
         {{else}}
-        <button type="submit">Check result</button>
+        <button type="submit" method="POST">Check result</button>
         {{/if}}
       </li>
     </ul>

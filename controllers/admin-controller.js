@@ -119,38 +119,6 @@ const postCreateUser = async (req, res, next) => {
   })
 }
 
-const postLogin = async (req, res, next) => {
-  const { email, password } = req.body
-
-  let existingUser
-  try {
-    existingUser = await User.findOne({ email })
-  } catch (err) {
-    const error = new HttpError("Login failed. Please try again later.", 500)
-    return next(error)
-  }
-
-  if (!existingUser) {
-    const error = new HttpError(
-      "Invalid credentials, could not log you in.",
-      403
-    )
-    return next(error)
-  }
-
-  if (existingUser.password !== password) {
-    const error = new HttpError(
-      "Could not log you in, please check your credentials and try again.",
-      500
-    )
-    return next(error)
-  }
-  res.status(200).redirect("/admin")
-}
-
-const getLogin = (req, res, next) => {
-  res.status(200).render("adminLogin")
-}
 
 const postEditUser = async (req, res, next) => {
   const _id = req.params.userId
@@ -213,8 +181,6 @@ module.exports = {
   getIndex,
   getCreateUser,
   postCreateUser,
-  getLogin,
-  postLogin,
   postEditUser,
   getEditUser,
   deleteUser,

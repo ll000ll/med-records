@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema({
 })
 
 const superUserSchema = new mongoose.Schema({
-  password: { type: String, required: true, minlength: 2 },
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: true, minlength: 2 },
   accessLevel: {
     type: String,
     enum: ["auditor", "admin", "adminForApproval"],
