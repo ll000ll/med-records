@@ -1,48 +1,21 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style type="text/css">
-      .tg { border-collapse: collapse; border-spacing: 0; } .tg td {
-      border-color: black; border-style: solid; border-width: 1px; font-family:
-      Arial, sans-serif; font-size: 14px; overflow: hidden; padding: 10px 5px;
-      word-break: normal; } .tg th { border-color: black; border-style: solid;
-      border-width: 1px; font-family: Arial, sans-serif; font-size: 14px;
-      font-weight: normal; overflow: hidden; padding: 10px 5px; word-break:
-      normal; } .tg .tg-0lax { text-align: left; vertical-align: top; }
-    </style>
-  </head>
-  <body>
-    <div>
-      {{#if hasUsers}}
-      <table class="tg">
-        <thead>
-          <tr>
-            <th class="tg-0lax">nationalId</th>
-            <th class="tg-0lax">email</th>
-            <th class="tg-0lax">docs</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each users}}
-          <tr>
-            <td class="tg-0lax">{{this.nationalId}}</td>
-            <td class="tg-0lax">{{this.email}}</td>
-            <td class="tg-0lax">
-              <a href="/results/{{this.docs}}" target="_blank">Your results:
-                <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
-              </a>
-            </td>
-          </tr>
-          
-          {{/each}}
-        </tbody>
-      </table>
-      {{ else}} 
-      <h1>No users found</h1>
-      {{/if}}
-    </div>
-  </body>
-</html>
+<div>
+  {{#if hasUsers}}
+  <h2>Your data:</h2>
+  <div class="result-table result-table--3cols">
+
+  <div class="result-table-cell">National ID / EGN</div>
+  <div class="result-table-cell">Email:</div>
+  <div class="result-table-cell">Docs:</div>
+  {{#each users}}
+  <div class="result-table-cell">{{this.nationalId}}</div>
+  <div class="result-table-cell">{{this.email}}</div>
+  <div class="result-table-cell">    
+    <a href="/results/{{this.docs}}" target="_blank">
+      <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
+    </a></div>
+  {{/each}}
+</div>
+  {{ else}} 
+  <h1>No users found</h1>
+  {{/if}}
+</div>

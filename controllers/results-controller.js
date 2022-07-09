@@ -27,7 +27,7 @@ const postUserResults = async (req, res, next) => {
     return next(err)
   }
 
-  if (userResult.password !== password) {
+  if (userResult?.password !== password) {
     const error = new HttpError(
       "Could not log you in, please check your credentials and try again.",
       500

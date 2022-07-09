@@ -24,37 +24,33 @@
         </ul>
     </form>
     <div></div>
-     <div>
+    <div>
       {{#if hasUsers}}
-      <table class="tg">
-        <thead>
-          <tr>
-            <th class="tg-0lax">nationalId</th>
-            <th class="tg-0lax">password</th>
-            <th class="tg-0lax">email</th>
-            <th class="tg-0lax">docs</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each users}}
-          <tr>
-            <td class="tg-0lax">{{this.nationalId}}</td>
-            <td class="tg-0lax">{{this.password}}</td>
-            <td class="tg-0lax">{{this.email}}</td>
-            <td class="tg-0lax">
-              <a href="/results/{{this.docs}}" target="_blank">
-                <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
-              </a>
-            </td>
-            <td>
-              <a id="update-user-btn" href="/admin/users/edit/{{this._id}}">              
-                <button>Update user</button>
-              </a>
-            </td>
-          </tr>     
-          {{/each}}
-        </tbody>
-      </table>
+      <h2>Your data:</h2>
+      <div class="result-table result-table--5cols">
+      <div class="result-table-cell">National ID / EGN</div>
+      <div class="result-table-cell">Password</div>
+      <div class="result-table-cell">Email:</div>
+      <div class="result-table-cell">Docs:</div>
+      <div class="result-table-cell"></div>
+      {{#each users}}
+
+      <div class="result-table-cell">{{this.nationalId}}</div>
+      <div class="result-table-cell">{{this.password}}</div>
+      <div class="result-table-cell">{{this.email}}</div>
+      <div class="result-table-cell">    
+        <a href="/results/{{this.docs}}" target="_blank">
+          <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
+        </a></div>
+      <div class="result-table-cell">
+        <a id="update-user-btn" href="/admin/users/edit/{{this._id}}">              
+          <div>Update user</div>
+        </a>
+      </div>
+      {{/each}}
+    </div>
+      {{ else}} 
+      <h1>No users found</h1>
       {{/if}}
     </div>
 </div>

@@ -3,7 +3,7 @@ a {
   font-weight: 100;
   letter-spacing: 2px;
   text-decoration: none;
-  background: rgba(0, 0, 0, 0.2);
+  /* background: rgba(0, 0, 0, 0.2); */
   padding: 20px 5px;
   display: inline-block;
   width: 100%;

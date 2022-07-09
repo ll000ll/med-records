@@ -1,0 +1,27 @@
+.result-table {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 3em 0;
+  padding: 0;
+}
+.result-table-cell {
+  box-sizing: border-box;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 100%; 
+  padding: 0.8em 1.2em;
+  overflow: hidden; 
+  list-style: none;
+  border: solid white;
+  /* background: fade(slategrey,20%); */
+  border-width:3px;
+}
+
+.result-table--2cols > .result-table-cell  { width: 50%; }
+.result-table--3cols > .result-table-cell  { width: 33.33%; }
+.result-table--4cols > .result-table-cell  { width: 25%; }
+.result-table--5cols > .result-table-cell  { width: 20%; }
+.result-table--6cols > .result-table-cell  { width: 16.6%;}
