@@ -5,6 +5,8 @@ const { engine } = require("express-handlebars")
 const multer = require("multer")
 const path = require("path")
 const { v4: uuidv4 } = require("uuid")
+const session = require("express-session")
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const resultRoutes = require("./routes/results-routes")
 const adminRoutes = require("./routes/admin-routes")
@@ -16,6 +18,11 @@ mongoose.Promise = global.Promise
 require("dotenv").config()
 
 const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_ATLAS_USERNAME}:${process.env.MONGODB_ATLAS_PASS}@cluster0.tmcub.mongodb.net/${process.env.MONGODB_ATLAS_DBNAME}?retryWrites=true&w=majority`
+
+const sessionStore = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+});
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -51,7 +58,18 @@ app.engine(
 app.set("view engine", "hbs")
 app.set("views", "views")
 app.use("/data", express.static(path.join(__dirname, "data")))
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")))
+app.use(
+  session({
+    secret: process.env.SESSION_KEY,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+  })
+)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(multer({ storage: fileStorage, fileFilter }).single("file"))

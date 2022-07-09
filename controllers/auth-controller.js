@@ -65,6 +65,8 @@ const postLogin = async (req, res, next) => {
     // return next(error)
     return res.render("login", { isAdminView: true })
   }
+  req.session.isLoggedIn = true
+  req.session.user = existingUser
   res.status(200).redirect("/admin")
 }
 
