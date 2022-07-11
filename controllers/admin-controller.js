@@ -8,9 +8,38 @@ const paginationProps = require("../utils/pagination")
 const { ITEMS_PER_PAGE } = require("../constants")
 
 const getIndex = async (req, res, next) => {
-  res
-    .status(200)
-    .render("adminDefault", { isAdmin: true, activeClassSearch: true })
+  if (!+req.query.page) {
+    res
+      .status(200)
+      .render("adminDefault", { isAdmin: true, activeClassSearch: true, emptyResultSet: false })
+  } else {
+    const page = +req.query.page || 1
+    const skippedItems = (page - 1) * ITEMS_PER_PAGE
+    const searchFilter = req.session.searchFilter
+    let totalItems = 0
+    try {
+      totalItems = await User.find(searchFilter).countDocuments()
+      usersFound =
+        searchFilter &&
+        (await User.find(searchFilter)
+          .skip(skippedItems)
+          .limit(ITEMS_PER_PAGE)
+          .lean())
+    } catch (err) {
+      const error = new HttpError("Could not get the users.", 500)
+      return next(error)
+    }
+  
+    res.status(200).render("adminDefault", {
+      ...paginationProps(page, totalItems),
+      ...searchFilter,
+      emptyResultSet: totalItems > 0,
+      isAdmin: true,
+      activeClassSearch: true,
+      hasUsers: usersFound?.length > 0,
+      users: usersFound,
+    })
+  }
 }
 
 const postIndex = async (req, res, next) => {
@@ -31,15 +60,27 @@ const postIndex = async (req, res, next) => {
     }
   }
   let usersFound
+  let totalItems = 0
+  const page = +req.query.page || 1
+  req.session.searchFilter = searchFilter
+  const skippedItems = (page - 1) * ITEMS_PER_PAGE
   try {
-    usersFound = searchFilter && (await User.find(searchFilter).lean())
+    totalItems = await User.find(searchFilter).countDocuments()
+    usersFound =
+      searchFilter &&
+      (await User.find(searchFilter)
+        .skip(skippedItems)
+        .limit(ITEMS_PER_PAGE)
+        .lean())
   } catch (err) {
     const error = new HttpError("Could not get the users.", 500)
     return next(error)
   }
 
   res.status(200).render("adminDefault", {
-    emptyResultSet,
+    ...paginationProps(page, totalItems),
+    ...searchFilter,
+    emptyResultSet: !usersFound,
     isAdmin: true,
     activeClassSearch: true,
     hasUsers: usersFound?.length > 0,

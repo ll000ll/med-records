@@ -26,11 +26,16 @@
     <div></div>
     <div>
       {{#if hasUsers}}
-      <h2>Your data:</h2>
-      <div class="result-table result-table--5cols">
+      <h2>Search results for: ==>>
+        <i>{{#if nationalId}} EGN: {{nationalId}};{{/if}}</i>
+        <i>{{#if email}} Email: {{email}};{{/if}}</i>
+        <i>{{#if accessLevel}} Access Level: {{accessLevel}};{{/if}}</i> &lt;&lt;==
+      </h2>
+      <div class="result-table result-table--6cols">
       <div class="result-table-cell">National ID / EGN</div>
       <div class="result-table-cell">Password</div>
       <div class="result-table-cell">Email:</div>
+      <div class="result-table-cell">Access Level:</div>
       <div class="result-table-cell">Docs:</div>
       <div class="result-table-cell"></div>
       {{#each users}}
@@ -38,6 +43,7 @@
       <div class="result-table-cell">{{this.nationalId}}</div>
       <div class="result-table-cell">{{this.password}}</div>
       <div class="result-table-cell">{{this.email}}</div>
+      <div class="result-table-cell">{{this.accessLevel}}</div>
       <div class="result-table-cell">    
         <a href="/results/{{this.docs}}" target="_blank">
           <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
@@ -48,9 +54,8 @@
         </a>
       </div>
       {{/each}}
+      {{> pagination}}
     </div>
-      {{ else}} 
-      <h1>No users found</h1>
       {{/if}}
     </div>
 </div>

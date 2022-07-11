@@ -53,6 +53,7 @@ app.engine(
     layoutsDir: "views/layouts/",
     defaultLayout: "main-layout",
     extname: "hbs",
+    partialsDir: path.join(__dirname, "views/partials")
   })
 )
 app.set("view engine", "hbs")
