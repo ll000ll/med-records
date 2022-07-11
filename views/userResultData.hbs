@@ -14,7 +14,24 @@
       <i class="fa-solid fa-file-pdf fa-2xl" id="pdf-icon"></i>
     </a></div>
   {{/each}}
-</div>
+  </div>
+    <div class="pagination-container">
+    <section class="pagination" >
+      {{#if firstPageRendered}}
+      <a href="?page=1">1</a>
+      {{/if}}
+      {{#if hasPreviousPage }}
+      <a href="?page={{previousPage}}"> &lt; &lt; </a>
+      {{/if}}
+      <a href="?page={{currentPage}}" class="active">{{currentPage}}</a>
+      {{#if hasNextPage}}
+      <a href="?page={{nextPage}}"> >></a>
+      {{/if}}
+      {{#if lastPageRendered}}
+      <a href="?page={{lastPage}}">...{{lastPage}}</a>
+      {{/if}}
+    </section>
+    </div>
   {{ else}} 
   <h1>No users found</h1>
   {{/if}}

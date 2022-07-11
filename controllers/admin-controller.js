@@ -4,6 +4,8 @@ const rootDir = require("../utils/path")
 const { User } = require("../models/user")
 const HttpError = require("../models/http-error")
 const deleteFile = require("../utils/fileDeletion")
+const paginationProps = require("../utils/pagination")
+const { ITEMS_PER_PAGE } = require("../constants")
 
 const getIndex = async (req, res, next) => {
   res
@@ -45,19 +47,28 @@ const postIndex = async (req, res, next) => {
   })
 }
 
-const getAllUsers = async(req, res, next) => {
+const getAllUsers = async (req, res, next) => {
   let allUsers
+
+  const page = +req.query.page || 1
+  const skippedItems = (page - 1) * ITEMS_PER_PAGE
+  let totalItems = 0
   try {
-    allUsers = await User.find({}).lean()
+    totalItems = await User.find().countDocuments()
+    allUsers = await User.find({})
+      .skip(skippedItems)
+      .limit(ITEMS_PER_PAGE)
+      .lean()
   } catch (err) {
     const error = new HttpError("Could not get all the users.", 500)
     return next(error)
   }
   res.render("userResultData", {
+    ...paginationProps(page, totalItems),
     hasUsers: allUsers.length > 0,
     users: allUsers,
     activeClassList: true,
-    isAdmin: true
+    isAdmin: true,
   })
 }
 
@@ -118,7 +129,6 @@ const postCreateUser = async (req, res, next) => {
     ],
   })
 }
-
 
 const postEditUser = async (req, res, next) => {
   const _id = req.params.userId
@@ -185,5 +195,5 @@ module.exports = {
   getEditUser,
   deleteUser,
   postIndex,
-  getAllUsers
+  getAllUsers,
 }

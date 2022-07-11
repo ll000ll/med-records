@@ -11,17 +11,50 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  width: 100%; 
+  width: 100%;
   padding: 0.8em 1.2em;
-  overflow: hidden; 
+  overflow: hidden;
   list-style: none;
   border: solid white;
   /* background: fade(slategrey,20%); */
-  border-width:3px;
+  border-width: 3px;
 }
 
-.result-table--2cols > .result-table-cell  { width: 50%; }
-.result-table--3cols > .result-table-cell  { width: 33.33%; }
-.result-table--4cols > .result-table-cell  { width: 25%; }
-.result-table--5cols > .result-table-cell  { width: 20%; }
-.result-table--6cols > .result-table-cell  { width: 16.6%;}
+.result-table--2cols > .result-table-cell {
+  width: 50%;
+}
+.result-table--3cols > .result-table-cell {
+  width: 33.33%;
+}
+.result-table--4cols > .result-table-cell {
+  width: 25%;
+}
+.result-table--5cols > .result-table-cell {
+  width: 20%;
+}
+.result-table--6cols > .result-table-cell {
+  width: 16.6%;
+}
+
+.pagination {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex;
+  width: auto;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: aqua;
+  padding: 0.5rem;
+  border: 1px solid green;
+  margin: 0 1rem;
+  display: flex;
+}
+
+.pagination a:hover,
+.pagination a:active,
+.pagination a.active {
+  background-color: aquamarine;
+  color: blueviolet;
+}
