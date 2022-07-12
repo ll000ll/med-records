@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs")
+const tokenGenerator = require("token-generator")
 
 const HttpError = require("../models/http-error")
 const { SuperUser } = require("../models/user")
+const { RESET_TOKEN_EXPIRATION } = require("../constants")
 
 const getSignup = (req, res, next) => {
   res.status(200).render("login", { submitView: true, isAdminView: true })
@@ -72,9 +74,66 @@ const postLogin = async (req, res, next) => {
 }
 
 const logout = (req, res, next) => {
-  req.session.destroy(err => {
-    res.redirect('/admin/login')
+  req.session.destroy((err) => {
+    res.redirect("/admin/login")
   })
+}
+
+const getReset = (req, res, next) => {
+  res.render("resetPassword")
+}
+
+const postReset = async (req, res, next) => {
+  const { email } = req.body
+  try {
+    const credentialExists = await SuperUser.findOne({ email })
+    if (!credentialExists) {
+      return res.redirect("/admin/login", {
+        submitView: true,
+        isAdminView: true,
+      })
+    } else {
+      const tokenGeneratorSetup = tokenGenerator({
+        salt: process.env.SESSION_KEY,
+        timestampMap: process.env.RESET_PASS_TOKEN_TIMESTAMP_SALT, // 10 chars array for obfuscation proposes
+      })
+      const resetToken = tokenGeneratorSetup.generate()
+      await SuperUser.findOneAndUpdate(
+        { email },
+        { resetToken, resetTokenExpiration: RESET_TOKEN_EXPIRATION }
+      )
+
+      //TODO: Send Email Here <a href://process.env.host:PORT/reset/{token}> link </a>
+      return res.send(
+        `reset pass <a href:"http://localhost:5000/reset/${token}"> here </a>`
+      )
+    }
+  } catch (err) {
+    let error = new HttpError("Something went wrong with this reset", 500)
+    return next(error)
+  }
+  // res.status(200).render("login", { isAdminView: true })
+}
+
+const getNewPassword = async (req, res, next) => {
+  const { token } = req.params
+  const user = await SuperUser.findOne({
+    resetToken: token,
+    resetTokenExpiration: { $gt: Date.now() },
+  })
+  res.render("newPassword", { isAdminView: true, userId: user._id })
+}
+
+const postNewPassword = async (req, res, next) => {
+  const { password } = req.body
+  const { userId } = req.body
+  const hashedPassword = await bcrypt.hash(password, 12)
+
+  const user = await SuperUser.findOneAndUpdate(
+    { _id: userId },
+    { password: hashedPassword }
+  )
+  res.redirect("/admin/login")
 }
 
 module.exports = {
@@ -82,5 +141,9 @@ module.exports = {
   postSignup,
   getLogin,
   postLogin,
-  logout
+  logout,
+  getReset,
+  postReset,
+  getNewPassword,
+  postNewPassword,
 }

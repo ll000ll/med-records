@@ -18,7 +18,9 @@ const superUserSchema = new mongoose.Schema({
     type: String,
     enum: ["auditor", "admin", "adminForApproval"],
     default: "admin",
-  }
+  },
+  resetToken: String ,
+  resetTokenExpiration: Date,
 })
 
 module.exports = {
