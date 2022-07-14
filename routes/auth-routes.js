@@ -1,11 +1,18 @@
 const express = require("express")
+const { body } = require("express-validator")
 
-const router = express.Router()
 const authController = require("../controllers/auth-controller")
 const isAuth = require("../middleware/isAuth")
+const {validateUser} = require("../validations/userCreation")
+
+const router = express.Router()
 
 router.get("/signup", authController.getSignup)
-router.post("/signup", authController.postSignup)
+router.post(
+  "/signup",
+  validateUser,
+  authController.postSignup
+)
 router.get("/login", authController.getLogin)
 router.post("/login", authController.postLogin)
 router.get("/logout", isAuth, authController.logout)

@@ -1,11 +1,11 @@
 <div>
-  </form>
+  {{#if errorMessage}}<h1>{{ errorMessage }}</h1>{{/if}}
   <form action="/results" method="POST" class="user-login-form">
     <ul>
       <li class="form-row">
         {{#if isAdminView}}
         <label for="email">Email:</label>
-        <input type="email" name="email" />
+        <input type="email" name="email" value="{{email}}" />
         {{else}}
         <label for="nationalId">EGN:</label>
         <input type="number" name="nationalId" />

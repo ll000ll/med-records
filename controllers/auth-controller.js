@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs")
 const tokenGenerator = require("token-generator")
+const { validationResult } = require("express-validator")
 
 const HttpError = require("../models/http-error")
 const { SuperUser } = require("../models/user")
@@ -15,11 +16,22 @@ const getLogin = (req, res, next) => {
 
 const postSignup = async (req, res, next) => {
   const { email, password, confirmPassword } = req.body
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res
+      .status(422)
+      .render("login", {
+        submitView: true,
+        errorMessage: errors.array()[0].msg,
+        isAdminView: true,
+        email
+      })
+  }
 
   try {
     const credentialExists = await SuperUser.findOne({ email })
     if (credentialExists) {
-      return res.redirect("/admin/login", {
+      return res.render("login", {
         submitView: true,
         isAdminView: true,
       })
